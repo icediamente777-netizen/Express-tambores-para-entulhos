@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express Aluguel de Tambores para Entulho - Ribeirão Preto</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- ESTILOS GERAIS E CORES --- */
+        :root {
+            --primary-blue: #1E6FA8;
+            --accent-orange: #F97316;
+            --dark-bg: #111111;
+            --card-bg: #1A1A1A;
+            --text-white: #FFFFFF;
+            --text-gray: #CCCCCC;
+            --price-yellow: #FFD700;
+            --whatsapp-green: #25D366;
+            --font-main: 'Outfit', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--dark-bg);
+            color: var(--text-white);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- UTILITÁRIOS --- */
+        .container {
+            width: 100%;
+            padding-right: 20px;
+            padding-left: 20px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        @media (min-width: 576px) { .container { max-width: 540px; } }
+        @media (min-width: 768px) { .container { max-width: 720px; } }
+        @media (min-width: 992px) { .container { max-width: 960px; } }
+        @media (min-width: 1200px) { .container { max-width: 1140px; } }
+
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--whatsapp-green);
+            color: white;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-whatsapp:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .highlight-yellow {
+            color: var(--price-yellow);
+        }
+
+        /* --- BARRA DE ALERTA --- */
+        .alert-bar {
+            background-color: var(--accent-orange);
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            padding: 60px 0;
+            background: radial-gradient(circle at center, #222 0%, #111 100%);
+            text-align: center;
+        }
+
+        .logo-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-weight: 900;
+            border: 4px solid #fff;
+        }
+
+        .hero-headline {
+            font-size: 2.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-price {
+            font-size: 3.5rem;
+            color: var(--price-yellow);
+            font-weight: 900;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .tambores-img-placeholder {
+            width: 100%;
+            max-width: 300px;
+            height: 250px;
+            background-color: var(--primary-blue);
+            border-radius: 15px;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            border: 5px solid #333;
+            position: relative;
+            box-shadow: 0 0 30px rgba(30, 111, 168, 0.4);
+        }
+
+        /* --- SEÇÃO PROBLEMAS --- */
+        .problemas {
+            padding: 60px 0;
+            background-color: #151515;
+        }
+
+        .problemas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .problema-card {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 4px solid #444;
+            transition: border-color 0.3s;
+        }
+
+        .problema-card:hover {
+            border-left-color: var(--accent-orange);
+        }
+
+        .problema-icon {
+            font-size: 2rem;
+            color: var(--accent-orange);
+            margin-bottom: 15px;
+        }
+
+        .problema-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .problema-card p {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        /* --- SEÇÃO COMO FUNCIONA --- */
+        .como-funciona {
+            padding: 60px 0;
+        }
+
+        .passos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .passo-card {
+            position: relative;
+            padding: 20px;
+        }
+
+        .passo-numero {
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(30, 111, 168, 0.2);
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .passo-icon {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .passo-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        /* --- SEÇÃO PREÇOS --- */
+        .precos {
+            padding: 60px 0;
+            background-color: #151515;
+        }
+
+        .precos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            align-items: start;
+        }
+
+        .preco-card {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #333;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .preco-card.destaque {
+            border-color: var(--primary-blue);
+            background-color: #1a2530;
+            transform: scale(1.05);
+            position: relative;
+        }
+
+        .oferta-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-orange);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .preco-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .preco-valor {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--price-yellow);
+            margin-bottom: 5px;
+        }
+
+        .preco-sub {
+            font-size: 1rem;
+            color: var(--text-gray);
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .preco-lista {
+            text-align: left;
+            margin-bottom: 30px;
+            color: var(--text-gray);
+        }
+
+        .preco-lista li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preco-lista i {
+            color: var(--primary-blue);
+        }
+
+        /* --- SEÇÃO DIFERENCIAIS --- */
+        .diferenciais {
+            padding: 60px 0;
+        }
+
+        .dif-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .dif-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .dif-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .dif-icon {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .dif-card h4 {
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        /* --- SEÇÃO DEPOIMENTOS --- */
+        .depoimentos {
+            padding: 60px 0;
+            background-color: #151515;
+        }
+
+        .depo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .depo-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .depo-aspas {
+            font-size: 3rem;
+            color: #333;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .depo-stars {
+            color: var(--price-yellow);
+            margin-bottom: 15px;
+        }
+
+        .depo-text {
+            color: var(--text-gray);
+            font-style: italic;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .depo-autor {
+            font-weight: 700;
+            color: white;
+        }
+
+        .depo-cidade {
+            font-size: 0.9rem;
+            color: var(--primary-blue);
+        }
+
+        /* --- CTA FINAL --- */
+        .cta-final {
+            padding: 80px 0;
+            background: linear-gradient(180deg, #111 0%, #1a2530 100%);
+            text-align: center;
+        }
+
+        .cta-final h2 {
+            font-size: 2.5rem;
+            line-height: 1.1;
+            margin-bottom: 15px;
+        }
+
+        .cta-final .urgencia {
+            color: var(--accent-orange);
+            font-weight: 800;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .cta-final p {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- RODAPÉ --- */
+        footer {
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid #333;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="alert-bar">
+        <div class="container">
+            ⚠️ Promoção válida por tempo limitado!
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="container">
+            <div class="logo-placeholder">
+                LOGO <br> EXPRESS
+            </div>
+            <h1 class="hero-headline">Cansado de <span class="highlight-yellow">entulho</span> espalhado na obra?</h1>
+            
+            <div class="tambores-img-placeholder">
+                [IMAGEM: 3 Tambores Azuis Vibrantes - Fundo Escuro]
+            </div>
+
+            <p class="hero-price">3 TAMBORES <br> POR R$ 99,00</p>
+            <a href="https://wa.me/5516981428944" class="btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> Alugar Agora via WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <section class="problemas">
+        <div class="container">
+            <h2 class="section-title">A caçamba tradicional não serve?</h2>
+            <div class="problemas-grid">
+                <div class="problema-card">
+                    <i class="fas fa-ban problema-icon"></i>
+                    <h3>Sem Espaço?</h3>
+                    <p>Sua rua é estreita ou o condomínio não permite caçambas grandes ocupando vaga.</p>
+                </div>
+                <div class="problema-card">
+                    <i class="fas fa-building problema-icon"></i>
+                    <h3>Mora em Apartamento?</h3>
+                    <p>Dificuldade extrema para descer entulho em pequenas quantidades sem sujar tudo.</p>
+                </div>
+                <div class="problema-card">
+                    <i class="fas fa-broom problema-icon"></i>
+                    <h3>Obra Suja e Bagunçada?</h3>
+                    <p>Entulho ensacado ocupando espaço e gerando risco de multas e reclamações.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="como-funciona">
+        <div class="container">
+            <h2 class="section-title">É Prático Demais!</h2>
+            <div class="passos-grid">
+                <div class="passo-card">
+                    <span class="passo-numero">1</span>
+                    <i class="fas fa-truck-loading passo-icon"></i>
+                    <h3>Levamos os Tambores</h3>
+                    <p>Entregamos os tambores vazios e limpos no local da sua obra.</p>
+                </div>
+                <div class="passo-card">
+                    <span class="passo-numero">2</span>
+                    <i class="fas fa-shoveling passo-icon"></i>
+                    <h3>Você Enche</h3>
+                    <p>Você coloca o entulho nos tambores no seu ritmo, sem pressa.</p>
+                </div>
+                <div class="passo-card">
+                    <span class="passo-numero">3</span>
+                    <i class="fas fa-truck passo-icon"></i>
+                    <h3>Nós Retiramos</h3>
+                    <p>Agende a retirada. Coletamos os tambores cheios e cuidamos do descarte legal.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="precos">
+        <div class="container">
+            <h2 class="section-title">Preços Transparentes</h2>
+            <div class="precos-grid">
+                
+                <div class="preco-card">
+                    <h3>Retirada Agendada</h3>
+                    <p class="preco-valor">R$ 130</p>
+                    <span class="preco-sub">por tambor</span>
+                    <ul class="preco-lista">
+                        <li><i class="fas fa-check"></i> 1 Tambor de 200L</li>
+                        <li><i class="fas fa-check"></i> Agendamento padrão</li>
+                        <li><i class="fas fa-check"></i> Descarte Legal</li>
+                    </ul>
+                    <a href="https://wa.me/5516981428944" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Chamar no Zap
+                    </a>
+                </div>
+
+                <div class="preco-card destaque">
+                    <span class="oferta-badge">Melhor Custo-Benefício</span>
+                    <h3>⚡ COMBO PROMO</h3>
+                    <p class="preco-valor">R$ 99</p>
+                    <span class="preco-sub">valor total (3 tambores)</span>
+                    <ul class="preco-lista">
+                        <li><i class="fas fa-check"></i> <strong>3 Tambores</strong> de 200L</li>
+                        <li><i class="fas fa-check"></i> Entrega e Retirada</li>
+                        <li><i class="fas fa-check"></i> Descarte Legal</li>
+                    </ul>
+                    <a href="https://wa.me/5516981428944" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Pegar Promoção
+                    </a>
+                </div>
+
+                <div class="preco-card">
+                    <h3>Retirada Urgente</h3>
+                    <p class="preco-valor">R$ 180</p>
+                    <span class="preco-sub">por tambor</span>
+                    <ul class="preco-lista">
+                        <li><i class="fas fa-check"></i> Coleta Prioritária</li>
+                        <li><i class="fas fa-check"></i> Mesmos benefícios</li>
+                        <li><i class="fas fa-check"></i> Suporte Rápido</li>
+                    </ul>
+                    <a href="https://wa.me/5516981428944" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Solicitar Urgente
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="diferenciais">
+        <div class="container">
+            <h2 class="section-title">Por que nos escolher?</h2>
+            <div class="dif-grid">
+                <div class="dif-card">
+                    <i class="fas fa-file-contract dif-icon"></i>
+                    <h4>Sem Licença Necessária</h4>
+                </div>
+                <div class="dif-card">
+                    <i class="fas fa-sparkles dif-icon"></i>
+                    <h4>Obra Mais Limpa</h4>
+                </div>
+                <div class="dif-card">
+                    <i class="fas fa-bolt dif-icon"></i>
+                    <h4>Rápido e Ágil</h4>
+                </div>
+                <div class="dif-card">
+                    <i class="fas fa-hand-holding-heart dif-icon"></i>
+                    <h4>Prático</h4>
+                </div>
+                <div class="dif-card">
+                    <i class="fas fa-map-marker-alt dif-icon"></i>
+                    <h4>Atendemos Ribeirão e Região</h4>
+                </div>
+                <div class="dif-card">
+                    <i class="fas fa-recycle dif-icon"></i>
+                    <h4>Descarte Correto</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="depoimentos">
+        <div class="container">
+            <h2 class="section-title">Quem usou, aprova!</h2>
+            <div class="depo-grid">
+                
+                <div class="depo-card">
+                    <i class="fas fa-quote-right depo-aspas"></i>
+                    <div class="depo-stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="depo-text">"Serviço excelente! Pedi 3 tambores e retirei no dia seguinte. A obra ficou limpa rapidinho. Super recomendo!"</p>
+                    <p class="depo-autor">Carlos Silva</p>
+                    <p class="depo-cidade">Ribeirão Preto</p>
+                </div>
+
+                <div class="depo-card">
+                    <i class="fas fa-quote-right depo-aspas"></i>
+                    <div class="depo-stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="depo-text">"Melhor custo-benefício de ribeirão preto! Sem caçamba, sem burocracia. Os rapazes foram super educados e pontuais."</p>
+                    <p class="depo-autor">Ana Souza</p>
+                    <p class="depo-cidade">Cravinhos</p>
+                </div>
+
+                <div class="depo-card">
+                    <i class="fas fa-quote-right depo-aspas"></i>
+            
